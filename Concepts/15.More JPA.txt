@@ -1,0 +1,64 @@
+Here we will discuss most commonly used basic annotations in hibernate - @Entity, @Table, @Id, @GeneratedValue, @Basic, @Transient, @Temporal and @Lob.
+
+ 
+
+@Entity
+
+@Entity annotation (javax.persistence.Entity) over the class tell hibernate to treat this class as our entity class that needs to be saved.
+
+The hibernate specific Entity annotation org.hibernate.annotations.Entity has been deprecated in hibernate 4. We have to use annotations corresponding to its attributes/values to get the same result. For instance, @org.hibernate.annotations.Entity(selectBeforeUpdate=true) is replaced by @SelectBeforeUpdate(true).
+
+ 
+
+@Entity (name=”XYZ”)
+
+This will change the identity name to XYZ. By default, hibernate generate the table name same as classname with only an @Enity annotation. With @Entity(name=”XYZ”) and in the absence of an @Table annotation to change the table name, the entity name will be used to create table instead of class name.
+
+ 
+
+@Table(name=”XYZ”))
+
+@Table(name=”XYZ”)) annotation (javax.persistence.Table /org.hibernate.annotations.Table) tell hibernate to create table with name XYZ instead of class name. @Table(name=”XYZ”)) is different from @Entity (name=”XYZ”) in that @Table changes only table name and entity name still remains the default, which is class name. One of the applications of this difference between entity names and table names is the use of them within HQL(Hibernate Query Language).
+
+ 
+
+@Id
+
+The @Id (javax.persistence.Id) over the id field tell hibernate to make this field as the primary key of the table.
+
+ 
+
+@GeneratedValue
+
+If you use @GeneratedValue, then hibernate will automatically generate values for that using an internal sequence. Therefore you don’t have to set it manually. You can use it along with @Id and make your primary key automatically generated rather than setting each time. You can also specify a strategy on how the values will be generated like @GeneratedValue(strategy=GenerationType.AUTO). AUTO is the default if you don’t give a strategy. Other values are IDENTITY, SEQUENCE and TABLE, which are actually dependent on the database that you use. AUTO is the preferred option as hibernate will chose the best strategy for us automatically.
+
+ 
+
+@Basic
+
+@Basic without any parameters is same as without having it. It just tells hibernate to treat it is a field that needs to be saved and is the same behavior without it. However the use comes when it is used along with its parameters. By default it is same as @Basic (optional=true) and the field can be not supplied any value (not calling getter) or supplied with a null value. @Basic (optional=false) makes it a non-null field.  If not supplied any value (not calling getter) or supplied with a null value with @Basic (optional=false), you will get an exception: org.hibernate.PropertyValueException: not-null property references a null or transient value.
+
+ 
+
+@Transient
+
+This tells hibernate not to save this field. Even without this annotation, a static variable or a transient variable is not saved. So the behavior is same for a static variable, transient variable or any other variable with @Transient annotation. If annotations are placed over getters, those placed over fields are ignored and only getters are considered. Even other fields are ignored and all other getters are considered. Hence if you have annotations over any of your getter, then a static variable, transient variable or any other variable will be saved as usual if it has a getter.
+
+ 
+
+@Temporal
+
+@Temporal over a date field tells hibernate the format in which the date needs to be saved. For instance, by default the date will be saved as a timestamp, but to save date alone we can use @Temporal(TemporalType.DATA).
+
+ 
+
+@Lob
+
+@Lob tells hibernate that this is a large object, not a simple object. So hibernate creates a CLOB or BLOB based on the type of the object. For instance, if @Lob comes over a string, then hibernate assumes to use a character large object (CLOB).
+
+ 
+
+Note:
+
+If a class is present in javax.persistence and org.hibernate, it is preferred to import from javax.persistence package. This will make the code more generic and it will be easy to replace hibernate with another framework that implements Java Persistence API.
+Annotations on fields usually can be used over the getters too. This is preferred in most cases as it gives more flexibility to change the actual field name or add some extra logic while retrieving the data. If annotations are placed over getters, those placed over fields are ignored and only getters are considered. Even other fields are ignored and all other getters are considered. For instance, put @id over the setter and field, and see for yourself that the one over field is ignored and even other annotations over other fields are ignored.

@@ -1,0 +1,80 @@
+Hibernate Configuration File(cfg file) is the file loaded into an hibernate application when working with hibernate.Hibernate uses this file to establish connection to the database server.It is an XML file which is used to define below information.Standard name for this file is hibernate.cfg.xml.
+
+
+DataBase connection details: Driver class, URL, username and Password.
+Hibernate properties: Dialect, show_sql, second_level_cache .etc
+Mapping files names.
+
+There must be one configuration file for each database used in the application, suppose if we want to connect with 2 databases, like Oracle, MySql, then we must create 2 configuration files with different names, like oracle.cfg.xml fr Oracle DB and mysql.cfg.xml for mysql database.
+
+Number of database’s = that many number of configuration files.
+
+
+Sample Configuration File :
+
+hibernate.cfg.xml
+
+<hibernate-configuration>
+<session-factory>
+  
+<! -- Related to the connection START -->
+<property name="connection.driver_class">Driver Class Name </property>
+<property name="connection.url">URL </property>
+<property name="connection.user">USER NAME </property>
+<property name="connection.password">PASSWORD</property>
+<! -- Related to the connection END -->
+  
+<! -- Related to hibernate properties START -->
+<property name="show_sql">true/false</property>
+<property name="format_sql">true/false</property>
+<property name="use_sql_comments">true/false</property>
+<property name="dialet">Database dialet class</property>
+<property name="hbm2ddl.auto">create/create-drop/update/validate</property>
+<! -- Related to hibernate properties END-->
+  
+<! -- Related to mapping START-->
+<mapping resource="hbm file 1 name .xml" / >
+<mapping resource="hbm file 2 name .xml" / >
+<! -- Related to the mapping END -->
+  
+</session-factory>
+</hibernate-configuration>
+
+
+Description of the elements in configuration file
+
+
+1. connection.pool_size : Used to configure connection pooling in hibernate.cfg.xml.
+
+	<property name="connection.pool_size">10</property>
+
+2. show_sql : If the value is true, We can see generated sql statements in console..
+
+	<property name="show_sql">true</property>
+
+3. format_sql : If the value is true, We can see generated sql statements in a readable format.
+
+	<property name="format_sql">true</property>
+
+4. use_sql_comments : If the value is true, We can see comments in generated sql statements.
+
+	<property name="use_sql_comments">true</property>
+
+5. hbm2ddlauto:
+
+hbm2ddl Configuration and Name Annotations in Hibernate
+Here we will learn about hbm2ddl Configuration in the hibernate configuration file (hibernate.cfg.xml). Actually hbm2ddl Configuration means hibernate mapping to create schema DDL (Data Definition Language).
+          <!– Drop and re-create the database schema on startup –>
+         
+	<property name=”hbm2ddl.auto”>create</property> 
+
+Automatically validates or exports schema DDL to the database when the SessionFactory is created. With create-drop, the database schema will be dropped when the SessionFactory is closed explicitly.
+ 
+
+hbm2ddl.auto–>create -Always create new schema 
+hbm2ddl.auto–>update -Update existing schema
+
+create: Creates schema, destroys previous data.
+create-drop: Drops the schema at the end of a session.
+update: Updates the schema.
+validate:Validates the schema. It makes no changes to database.

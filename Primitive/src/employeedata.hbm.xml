@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.rags.primitive.Employee" table="employeedata">
+		<id name="EmployeeId" column="EmpId"  >
+			<generator class="assigned" /></id>
+		<property name="EmployeeName" column="EmpName" length="10"/>
+		<property name="EmployeeSalary"/>
+	</class>
+</hibernate-mapping>

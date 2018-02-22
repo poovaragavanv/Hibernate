@@ -1,0 +1,135 @@
+CRUD operations, and also object states and transitions in hibernate. CRUD operations are Create(save), Read(select), Update(update) and Delete(delete). We will see object states in hibernate such a new/transient, attached/persistent and detached. We will also see how update is called automatically (without an explicit update call) when the object is attached to a session.
+
+ 
+
+Select, Save, update and delete operations in hibernate should be called within a session:
+
+ SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+
+ Session session = sessionFactory.openSession();
+
+ session.beginTransaction();
+
+ // DB operations - select, save, update and/or delete
+
+ session.getTransaction().commit();   
+ 
+
+Select: We can get an object from database using session.get, passing the class type and the primary key. Primary key is identified using the @Id annotated field in the entity class.
+
+User u = (User)session.get(User.class, 1);
+
+System.out.println(u.getName());
+ 
+
+Make sure you have an record already created in database with the specified id and also the hbm2ddl.auto property is not create. Else you will get NullPointerException as:
+
+Hibernate: select user0_.id as id3_0_, user0_.name as name3_0_ from User user0_ where user0_.id=?
+
+Exception in thread "main" java.lang.NullPointerException…
+If the hbm2ddl.auto property is create and you haven't created any record with the specified id within the session, the existing schema will be deleted and hence there won’t be an object to query
+
+ 
+
+Save: We can save an object into the database using session.save:
+
+User u = new User();
+
+u.setId(1);
+
+u.setName("Sample");
+
+…
+
+session.save(u);
+If the hbm2ddl.auto property is update, and if you try to save the same object twice, it will throw exception:
+
+org.hibernate.exception.ConstraintViolationException: Could not execute JDBC batch update
+
+…
+
+java.sql.BatchUpdateException: Duplicate entry '1' for key 'PRIMARY'
+
+…
+If an object is already present, you have to use update instead. But if you are not sure, you can use session.saveOrUpdate(u). The saveOrUpdate() will first do a select query, and from the result if it see that the record is not already present in the database, it will execute save (insert); if it see that the record is there and property data has changed, it will execute an update; and if it see that the record is there and property data has not changed, it will not execute anything else.
+
+ 
+
+Update: We can update an object in database using session.update:
+
+User u = new User();
+
+u.setId(1);
+
+u.setName("Sample1");
+
+…
+
+session.update(u);
+When you run this when the id is present, you can see the update query in the console. If you run the test class again and again with the same id, you can see that the update query is executed every time we execute session.update() as hibernate doesn’t know whether the value is different from the database or not. However if you use session.saveOrUpdate(u) here, it won’t call the update query if the property data has not changed.
+
+To avoid running update is the data has not changed, you can also use the annotation @SelectBeforeUpdate(true) over the entity:
+
+import javax.persistence.Entity;
+
+…
+
+@Entity
+
+@SelectBeforeUpdate(true)
+
+public class User {
+
+…
+Now every time you execute session.update(), hibernate will first do a select query, check if data is different and if different, execute the update request. 
+
+If you have worked on hibernate3, you would have used the hibernate specific @Entity annotation in addition to the javax.persistence annotation.Entity and set its selectBeforeUpdate attribute to true as:
+
+…
+
+@Entity
+
+@org.hibernate.annotations.Entity(selectBeforeUpdate=true)
+
+public class User {
+
+…
+However org.hibernate.annotations.Entity annotation is deprecated in Hibernate 4 and we have to use annotations corresponding to its attributes/values to get the same result as in the above code hibernate 4 specific snippet.
+
+ 
+
+If you do update for a record which is not already present, you will get exception like:
+
+org.hibernate.StaleStateException: Batch update returned unexpected row count..
+Even if you use the hibernate specific @Entity annotation with selectBeforeUpdate parameter as true, you will still get org.hibernate.StaleStateException, but with a slightly different error message:
+
+org.hibernate.StaleObjectStateException: Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect)...
+One possible solution here also is to use session.saveOrUpdate(), which will do an insert or update or no operation based on the situation.
+
+ 
+
+Delete: We can delete an object in database using session.delete:
+
+User u = new User();
+
+u.setId(1);
+
+u.setName("Sample1");
+
+…
+
+session.delete(u);
+The session.delete() method first do a select query to see if a matching record is present and then fires a delete request only if a matching record is found.
+
+ 
+
+Object States
+
+ A java object within a hibernate application can be in one of the three states:
+
+New/transient
+Attached/persistent
+Detached
+When an object is created, it will be in the new/transient state. Hibernate will not save any updates to the transient objects. When you do a get, save, update or delete from within a session transaction, the object moves to the persistent state. Now the object will be attached to the session and any changes will be tracked by hibernate. Finally when you do a session.commit(), hibernate will save the latest version of the object. Also, when you do a session.commit(), the object is detached from the session. This is the detached state of the object. Hibernate will not save any updates to the detached objects, until they are attached again to a session.
+
+ 

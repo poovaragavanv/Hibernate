@@ -1,0 +1,72 @@
+save
+
+Save method stores an object into the database. That means it insert an entry if the identifier doesn’t exist, else it will throw error. If the primary key already present in the table, it cannot be inserted.
+
+save(Object object) : Accepts instance of Entity to save. 
+save(String entityName, Object object) : Accepts entity name and instance of entity. 
+
+update
+
+Update method in the hibernate is used for updating the object using identifier. If the identifier is missing or doesn’t exist, it will throw exception.
+
+update(Object object) : Accepts the instance of new entity or any detached object from the session. 
+update(String entityName, Object object) : Accepts the entity name and instance of object. 
+
+
+saveOrUpdate
+
+This method calls save() or update() based on the operation. If the identifier exists, it will call update method else the save method will be called. saveOrUpdate() method does the following:
+
+If the object is already persistent in the current session, it do nothing
+If another object associated with the session has the same identifier, throw an exception to the caller
+If the object has no identifier property, save() the object
+If the object’s identifier has the value assigned to a newly instantiated object, save() the object
+
+saveOrUpdate(Object object): Accepts the instance of new entity or any detached object from the session to save or update. 
+saveOrUpdate(String entityName, Object object): Accepts the entity name and instance of object. 
+
+
+package hibernate;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+public class HibernateExample {
+    public static void main(String args[]){
+	Configuration configuration = new Configuration();
+	SessionFactory  sessionFactory =
+           configuration.configure().buildSessionFactory();
+	Session session = sessionFactory.openSession();
+	Transaction transaction = session.beginTransaction();
+	transaction.begin();
+	EmployeeInfo employeeInfo = new EmployeeInfo();
+	employeeInfo.setSno(1);
+	employeeInfo.setName("HibernateTestSave");
+	session.save(employeeInfo);
+	transaction.commit();
+	session.close();
+
+	session = sessionFactory.openSession();
+	transaction = session.beginTransaction();
+	transaction.begin();
+	employeeInfo = new EmployeeInfo();
+	employeeInfo.setSno(1);
+	employeeInfo.setName("HibernateTestUpdate");
+	session.update(employeeInfo);
+	transaction.commit();
+	session.close();
+
+	session = sessionFactory.openSession();
+
+	transaction = session.beginTransaction();
+	transaction.begin();
+	employeeInfo = new EmployeeInfo();
+	employeeInfo.setSno(1);
+	employeeInfo.setName("HibernateTestSaveOrUpdate");
+	session.saveOrUpdate(employeeInfo);
+	transaction.commit();
+
+	session.close();
+   }
+}

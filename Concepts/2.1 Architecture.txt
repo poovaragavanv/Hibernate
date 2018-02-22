@@ -1,0 +1,57 @@
+Architecture
+
+	1.SessionFactory
+		It is an Interface
+		It is long live multithreadObject, Usually One SessionFactory created for one database
+		Create MultipleDatabase create Multiple SessionFactory
+			Configuration cfg=new Configuration();  
+			//Empty object will be created.
+			cfg=cfg.configure();
+		when you called  configure()  method  It looks for hibernate cfg.xml and for Hibernate mapping file.
+		Filled with all the properties defined in the configuration documents and mapping documents
+			SessionFactory sc=cfg.buildSessionFactory();
+		SessionFactory object will be created once and will be used by multiple users for long time.
+		Session Factory object is the factory for session objects.
+		If you are using  two databases called mysql and oracle in your hibernate application then you need to build 2 SessionFactory object
+			Configuration cfg=new Configuration();
+			Configuration cfg1=cfg.configure(“mysql.cfg.xml”);
+			SessionFactory sf1=cfg1.builed SessionFactory();
+
+			Configuration cfg2=cfg.configure(“oracle.cfg.xml”);
+			SessionFactory sf2=cfg2.builed SessionFactory();
+		When we are using more than one database in our application than we use the HibernateUtil class which is implemented based on singleton design 		pattern which insure that one and only one sessionFactory object will be created for entire application
+
+	2.Configuration
+		Configuration is a class which is available in “org.hibernate.cfg “package .
+		Hibernate runtime system will be stored by installing configuration class 1st .
+		Configuration class has two implement methods as follows:
+			Configuration configure()
+			Configuration configure(string)
+		Configure () method is responsible to read all the property defined in hibernate configuration documents and all hibernate mapping documents.
+		After reading all the properties from hibernate configuration and mapping documents configuration object is responsible to create the 				SessionFactory object.Once the session factory is created there is no use with configuration object.
+	3.Session
+		session interface is the primary interface used in Hibernate Application. 
+		It is a single threaded sort-lived object and represents conversation between application and the persistent store. 
+		It helps to create query objects to retrieve persistent objects.
+		You can get the session object from session factory :
+			Session session = sessionFactory.openSession();
+		Session Interface role :
+			Wraps a JDBC connection.
+			Factory for Transaction.
+			Holds a mandatory (first-level) cache of persistent objects, used when navigating the object graph or looking up objects by identifier.
+	4.Persistent objects
+		Persistent objects are short-lived, single threaded objects that contains persistent state and business function. 
+		These can be ordinary JavaBeans/POJOs. They are associated with exactly one org.hibernate.Session.
+	5.Transient objects
+		Transient objects are persistent classes instances that are not currently associated with a org.hibernate.Session. 
+		They may have been instantiated by the application and not yet persisted, or they may have been instantiated by a closed org.hibernate.Session.
+	6.Transaction (org.hibernate.Transaction)
+		Transaction is a single-threaded, short-lived object used by the application to specify atomic units of work. 
+		It abstracts the application from the underlying JDBC or JTA transaction. 
+		A org.hibernate.Session might span multiple org.hibernate.Transaction in some cases.
+	7.ConnectionProvider (org.hibernate.connection.ConnectionProvider)
+		ConnectionProvider is a factory for JDBC connections. 
+		It provides abstraction between the application and underlying javax.sql.DataSource or java.sql.DriverManager.
+		It is not exposed to application, but it can be extended by the developer.
+	8.TransactionFactory (org.hibernate.TransactionFactory)
+		A factory for org.hibernate.Transaction instances.

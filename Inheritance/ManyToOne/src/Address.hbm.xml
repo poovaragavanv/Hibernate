@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.candidjava.hibernate.Address" table="ADDRESS1">
+		<id name="addressId" type="long" column="aid">
+			<generator class="increment" />
+		</id>
+		<property name="street" column="street" type="string" />
+		<property name="city" column="city" type="string" />
+		<property name="state" column="state" type="string" />
+		<property name="zipcode" column="zip" type="string" />
+	</class>
+</hibernate-mapping>

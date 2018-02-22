@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE hibernate-mapping 
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" 
+    "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.rags.tablepersubclas.Book" table="Book">
+		<id name="id" type="int" column="id">
+			<generator class="increment" />
+		</id>
+		<property name="title" type="string" column="title" />
+		<property name="author" type="string" column="author" />
+		<property name="cost" type="double" column="cost" />
+
+		<joined-subclass name="com.rags.tablepersubclas.SpecialEditionBook"
+			table="Special">
+			<key column="id" />
+			<property name="newfeatures" type="string" column="features" />
+		</joined-subclass>
+
+		<joined-subclass name="com.rags.tablepersubclas.InternationalBook" table="International">
+			<key column="id" />
+			<property name="languages" type="string" column="languages" />
+			<property name="region" type="int" column="region" />
+		</joined-subclass>
+
+	</class>
+</hibernate-mapping>

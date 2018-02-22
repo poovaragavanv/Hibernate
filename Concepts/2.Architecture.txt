@@ -1,0 +1,27 @@
+2.1 SessionFactory (org.hibernate.SessionFactory)
+
+A thread-safe, immutable cache of compiled mappings for a single database. A factory for org.hibernate.Session instances. A client of org.hibernate.connection.ConnectionProvider. Optionally maintains a second level cache of data that is reusable between transactions at a process or cluster level.
+
+2.2 Session (org.hibernate.Session)
+
+A single-threaded, short-lived object representing a conversation between the application and the persistent store. Wraps a JDBC java.sql.Connection. Factory for org.hibernate.Transaction. Maintains a first level cache of persistent the application’s persistent objects and collections; this cache is used when navigating the object graph or looking up objects by identifier.
+
+2.3 Persistent objects and collections
+
+Short-lived, single threaded objects containing persistent state and business function. These can be ordinary JavaBeans/POJOs. They are associated with exactly one org.hibernate.Session. Once the org.hibernate.Session is closed, they will be detached and free to use in any application layer (for example, directly as data transfer objects to and from presentation).
+
+2.4 Transient and detached objects and collections
+
+Instances of persistent classes that are not currently associated with a org.hibernate.Session. They may have been instantiated by the application and not yet persisted, or they may have been instantiated by a closed org.hibernate.Session.
+
+2.5 Transaction (org.hibernate.Transaction)
+
+(Optional) A single-threaded, short-lived object used by the application to specify atomic units of work. It abstracts the application from the underlying JDBC, JTA or CORBA transaction. A org.hibernate.Session might span several org.hibernate.Transactions in some cases. However, transaction demarcation, either using the underlying API or org.hibernate.Transaction, is never optional.
+
+2.6 ConnectionProvider (org.hibernate.connection.ConnectionProvider)
+
+(Optional) A factory for, and pool of, JDBC connections. It abstracts the application from underlying javax.sql.DataSource or java.sql.DriverManager. It is not exposed to application, but it can be extended and/or implemented by the developer.
+
+2.7 TransactionFactory (org.hibernate.TransactionFactory)
+
+(Optional) A factory for org.hibernate.Transaction instances. It is not exposed to the application, but it can be extended and/or implemented by the developer.

@@ -1,0 +1,88 @@
+hbm2ddl Configuration in Hibernate
+
+	Actually hbm2ddl Configuration means hibernate mapping to create schema DDL (Data Definition Language).
+	
+		<!– Drop and re-create the database schema on startup –>
+        	<property name=”hbm2ddl.auto”>create</property> 
+
+	Automatically validates or exports schema DDL to the database when the SessionFactory is created. 	
+	With create-drop, the database schema will be dropped when the SessionFactory is closed explicitly.
+
+	<property name=”hbm2ddl.auto”>create</property> means schema DDL created every time when SessionFactory Object is created.
+
+
+Persistance Class1:
+
+	public static void main(String[] args)
+	{
+       	//Create the model object 
+       		UserDetails user1 = new UserDetails();
+       		UserDetails user2 = new UserDetails();
+        	user1.setUserId(1);
+        	user1.setUserName(“ABCD”);
+        	user2.setUserId(2);
+        	user2.setUserName(“EFGH”);     
+       	// Create Session Factory Object  – using annotation configuration object
+        	SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();  
+    	//Create Session object from session factory object
+        	Session session = sessionFactory.openSession();
+        	session.beginTransaction();
+    	//Use the session to save model objects
+        	session.save(user1);
+        	session.save(user2);
+        	session.getTransaction().commit();
+        	session.close();
+       }
+
+Persistance Class2:
+
+	public static void main(String[] args)
+	{
+       	/       
+       	// Create Session Factory Object  – using annotation configuration object
+        	SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();  
+    	//Create Session object from session factory object
+        	Session session = sessionFactory.openSession();
+        	session.beginTransaction();
+    	//Use the session to save model objects
+        	session.save(user1);
+        	session.save(user2);
+        	session.getTransaction().commit();
+        	session.close();
+       }
+
+	Here you see that the previous data is destroyed when we are using in the hibernate.cfg.xml file using the following line.
+
+		<property name=”hbm2ddl.auto”>create</property>
+
+Here 
+	hbm2ddl.auto–>create -Always create new schema 
+	hbm2ddl.auto–>update -Update existing schema 
+
+
+Now we are replacing upadte line with the  <property name=”hbm2ddl.auto”>update</property>for persistance3
+
+Persistance Class3:
+
+
+public static void main(String[] args)
+	{
+       	//Create the model object 
+       		UserDetails user1 = new UserDetails();
+       		UserDetails user2 = new UserDetails();
+        	user1.setUserId(3);
+        	user1.setUserName(“IJKL”);
+        	user2.setUserId(4);
+        	user2.setUserName(“MNOP”);         
+       	// Create Session Factory Object  – using annotation configuration object
+        	SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();  
+    	//Create Session object from session factory object
+        	Session session = sessionFactory.openSession();
+        	session.beginTransaction();
+    	//Use the session to save model objects
+        	session.save(user1);
+        	session.save(user2);
+        	session.getTransaction().commit();
+        	session.close();
+       }
+	

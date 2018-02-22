@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE hibernate-mapping 
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" 
+    "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping> 
+    <class name="com.candidjava.hibernate.Book" table="book" > 
+        <id name="id" type="integer" unsaved-value="0">
+            <generator  class="increment"/>
+        </id>
+        <property name="title" type="string" column="title"/>
+        <property name="author" type="string" column="author"/>
+        <property name="cost" type="double" column="cost"/> 
+    </class>
+    
+    <class  name="com.candidjava.hibernate.SpecialEditionBook" table="sbook">
+        <id name="id" type="integer" unsaved-value="0">
+            <generator  class="increment"/>
+        </id>
+        <property name="title" type="string" column="title"/>
+        <property name="author" type="string" column="author"/>
+        <property name="cost" type="double" column="cost"/> 
+     	<property name="newfeatures" type="string" column="features"/>
+    </class>
+    
+    <class  name="com.candidjava.hibernate.InternationalBook" table="ibook">
+        <id name="id" type="integer" unsaved-value="0">
+            <generator  class="increment"/>
+        </id>
+        <property name="title" type="string" column="title"/>
+        <property name="author" type="string" column="author"/>
+        <property name="cost" type="double" column="cost"/> 
+        
+		<property name="languages" type="string" column="languages"/>
+        <property name="region" type="int" column="region"/>
+    </class> 
+</hibernate-mapping>

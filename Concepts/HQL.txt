@@ -1,0 +1,340 @@
+ Till now we done the operations on single object (single row), here we will see modifications, updates on multiple rows of data (multiple objects) at a time.  In hibernate we can perform the operations on a single row (or) multiple rows at a time, if we do operations on multiple rows at once, then we can call this as bulk operations.
+
+* An object oriented form of SQL is called HQL
+
+* HQL syntax is very much similar to SQL syntax
+
+* HQL queries are formed by using Entities and their properties, where as SQL queries are formed by using Tables and their columns.
+
+* Here we are going to replace table column names  with POJO class variable names and table names with POJO class names in order to get HQL commands
+Example
+SQL: SELECT ACCNO, NAME, BALANCE FROM ACCOUNT
+HQL: SELECT accountId, name, balance from Account
+* In HQL query keywords(SELeCt, fRoM, AnD, oR, WhERe..etc) are not case sensitive where as Entity name and Entity properties names are case sensitive(SQL queries are not case sensitive)
+
+* HQL queries are database independent queries(Because HQL queries internally converted into database specific SQL queries using Dialect class)
+
+* We can perform SELECT, UPDATE, DELETE... etc, but we can't perform INSERT using HQL
+
+* Both positional and named parameters concepts are supported by hibernate
+
+Note
+     Named parameters are advisable in projects. Because if any changes Occur in the positions of the parameters no need to do changes in parameter setting.
+* We can execute aggregate function(MAX(), MIN(), AVG()... etc) using HQL.
+
+* Supports polymorphic queries
+
+* Return result as object
+
+* INSERT queries we can't execute using HQL. But if we are selecting the complete data from one table (backup table creation) that type of insert query is supported by HQL.
+SQL: CREATE TABLE ACCOUNT_BACKUP AS (SELECT * FROM ACCOUNT)
+
+* This feature is not at at all advisable. Because database side creating backup table is very simple. Generally we no need to create backup tables from hibernate side.
+
+* Support for advance features like pagination, fetch join with dynamic profiling, Inner/outer/full joins, Cartesian products, projection, aggregation(max, avg) and grouping, ordering, sub queries and SQL function calls.
+
+Steps to work with HQL
+Step 1: Write the HQL query as per requirement
+Step 2: Create a org.hibernate.Query object by passing HQL query
+Query query = session.createQuery(hqlQuery);
+Step 3: If the query contains parameters, set those values
+query.setParameter(index, value);
+Step 4: Execute query object
+query.list(); [for executing SELECT queries]
+query.executeUpdate(); [for executing UPDATE/DELETE queries]
+
+org.hibernate.Query
+* Query is an interface, QueryImpl is the implemented class
+
+* It is an obect oriented represented of Hibernate Query
+
+* The Query interface provides many methods. Below are the commonly used methods:
+public int executeUpdate(): is used to execute the update or delete query
+public List list(): returns the result of the select query as a list.
+public Query setFirstResult(int rowno): specifies the row number from where record will be retrived 
+public Query setFMaxResult(int rowno): specifies the number of records to be retrived from the relation (table)
+public Query setParameter(int position, Object value): it sets the value to the JDBC style query parameter
+public Query setParameter(String name, Object value): it sets the value to a named query parameter
+* To work with all HQL examples I am using the following entity 
+package com.ashok.hibernate.entity;
+ 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+ 
+@Entity
+@Table(name = "ACCOUNT")
+public class Account {
+ 
+    @Id
+    @GenericGenerator(name = "myGen", strategy = "increment")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "myGen)
+    @Column(name = "ACCNO")
+    private int accountId;
+    @Column(name = "NAME")
+    private String name;
+    @Column(name = "BALANCE")
+    private double balance;
+ 
+    public Account() {
+ 
+    }
+ 
+    public Account(int accountId, String name, double balance) {
+ this.accountId = accountId;
+ this.name = name;
+ this.balance = balance;
+    }
+ 
+    // getters and setters
+ 
+    @Override
+    public String toString() {
+ return  "Account [ accountId=" + accountId + ", name = + name
+             + ", balance=" + balance + "]";
+    }
+}
+
+Update using HQL
+SQL: UPDATE ACCOUNT SET NAME = 'Ashok_New' WHERE ACCNO = 1001;
+     By using session.update() method also we can achieve above functionality. Because single statement and the condition is on 'id' column and the condition is equality condition.
+SQL: UPDATE ACCOUNT SET NAME = 'Ashok_New' WHERE BALANCE = 3500;
+     By using session.update() method we can't achieve above functionality even it contains the single condition. Because the condition is not on the 'id' column. Here exactly the need of HQL is realized.
+
+Example
+SQL: UPDATE ACCOUNT SET NAME = 'Ashok_New' WHERE BALANCE = 3500;
+HQL: UPDATE Account a SET a.name = 'Ashok_New' WHERE a.balance = 3500;
+Code Block 
+String hqlQuery = "UPDATE Account a SET a.name = 'Ashok_New' WHERE a.balance = 3500";
+Query query = session.createQuery(hqlQuery);
+int rowsUpdated = query .executeUpdate();
+System.out.println("No. of rows updated : " +rowsUpdated );
+
+Delete Using HQL
+Example
+SQL: DELETE FROM ACCOUNT WHERE NAME LIKE '%ashok%' AND BALANCE > 5000;
+HQL:  DELETE FROM Account a WHERE a.name LIKE '%ashok%' AND a.balance > 5000;
+Code Block 
+String hqlQuery = "DELETE FROM Account a WHERE a.name LIKE '%ashok%' AND a.balance > 5000;";
+Query query = session.createQuery(hqlQuery);
+int rowsDeleted = query .executeUpdate();
+System.out.println("No. of rows deleted: " +rowsDeleted );
+
+SELECT using HQL
+     The SELECT Hibernate query is of the form
+From <package>.<Entity Class Name>
+From <Entity Class Name> as <alias name>
+From <Entity Class Name> as <alias name>
+
+Example:
+SQL: SELECT * FROM ACCOUNT
+HQL: FROM Account
+     OR
+     FROM Account a
+     OR
+     SELECT a FROM Account a
+Code block
+String hqlQuery = "SELECT a FROM Account a";
+Query query = session.createQuery(hqlQuery);
+List<Account> accountList = query.list();
+System.out.println(accountList);
+Example
+SQL: SELCT * FROM ACCOUNT WHERE NAME LIKE 'ashok%' AND BALANCE > 3500
+HQL: SELCT a FROM Account a WHERE a.name LIKE 'ashok%' AND a.balance > 3500
+Code block
+String hqlQuery = "SELCT a FROM Account a WHERE a.name LIKE 'ashok%' AND a.balance > 3500";
+Query query = session.createQuery(hqlQuery);
+List<Account> accountList = query.list();
+System.out.println(accountList);
+OR
+String hqlQuery = "SELCT a FROM Account a WHERE a.name LIKE 'ashok%' AND a.balance > 3500";
+List<Account> accountList = session.createQuery(hqlQuery).list();
+System.out.println(accountList);
+
+Parameter binding examples      
+     Without parameter binding, you have to concatenate the parameter String like this (bad code):  
+String hql = "from Account a where a.accountId = " + accountId;
+List result = session.createQuery(hql).list();
+     Passing an unchecked value from user input to the database will raise security concern, because it can easy get hack by SQL injection. You have to avoid the above bad code and using parameter binding instead.
+
+Hibernate Parameter binding
+       There are to ways to parameter binding: named parameters or positional.
+1. Named Parameters
+     This is the most common and user friendly way. It use colon followed by a parameter name (:example) to define a named parameter.
+Example  
+1. setParameter()
+     The setParameter is smart enough to discover the parameter data type for you. 
+String hql = "from Account a where a.accountId = :accountId";
+List<Account> accounts = session.createQuery(hql).setParameter("accountId",9001).list();
+2. setInteger()
+     The setInteger to tell hibernate this parameter data type is integer. 
+String hql = "from Account a where a.accountId = :accountId";
+List<Account> accounts = session.createQuery(hql).setInteger("accountId",9001).list();
+3. setProperties(bean)
+     You can pass an object into the parameter binding. Hibernate will automatically check the object's properties and match with the colon parameter. 
+Account account = new Account();
+account.setAccountId(9001);
+String hql = "from Account a where a.accountId = " + accountId";
+List<Account> accounts = session.createQuery(hql).setProperties(account).list();
+4. setProperties(map)
+     You can pass map into the parameter binding. Hibernate will autommatically checks the map keys and match with the colon parameter.
+Map<String, Object> map = new Map<String, Object>;
+map.put("accountId",9001);
+String hql = "from Account a where a.accountId = " + accountId";
+List<Account> accounts = session.createQuery(hql).setProperties(map).list();
+
+Aggregate Functions
+     Functions that operate against groups of resulting records. The supported aggregate functions are
+* avg(...), sum(...), min(...), max(...)
+* count(*)
+* count(...), count(distinct...), count(all...)
+Example
+SQL: SELECT MIN(BALANCE), MAX(BALANCE), AVG(BALANCE) FROM ACCOUNT;
+HQL: SELECT MIN(a.balance), MAX(a.balance), AVG(a.balance) FROM Account a;
+Code Block
+String hqlQuery = "SELECT MIN(a.balance), MAX(a.balance), AVG(a.balance) FROM Account a";
+Query query = session.createQuery(hqlQuery);
+List<Object[]> aggrs = query.list();
+for(Object[] aggrObject: aggrs) {
+    System.out.println("Min :" +aggrObject[0]);
+    System.out.println("Max :" +aggrObject[1]);
+    System.out.println("Avg :" +aggrObject[2]);
+}
+Aggregate function with "GROUP BY" clause
+Example 1: Group by single column
+SQL: SELECT NAME, AVG(BALANCE) FROM ACCOUNT GROUP BY NAME;
+HQL: SELECT a.name, AVG(a.balance) FROM Account a GROUP BY a.name;
+Code Block
+String hqlQuery = "SELECT a.name, AVG(a.balance) FROM Account a GROUP BY a.name";
+Query query = session.createQuery(hqlQuery);
+List<Object[]> list = query.list();
+for(Object[] group: list) {
+    System.out.println("Name :" +group[0]);
+    System.out.println("Avg balance :" +group[1]);
+}
+     Here List object contains one Object[] array per each group. Type of type elements in the Object[] array depends on the aggregate function return type, selected property types.
+Example 2: Group by multiple columns
+SQL: SELECT NAME, BALANCE, MIN(BALANCE), MAX(BALANCE), AVG(BALANCE) FROM ACCOUNT GROUP BY BALANCE, NAME;
+HQL: SELECT a.name, a.balance, MIN(a.balance), MAX(a.balance), AVG(a.balance) FROM Account a GROUP BY a.balance,a.name;
+Code Block
+String hqlQuery = "SELECT a.name, a.balance, MIN(a.balance), MAX(a.balance), AVG(a.balance) FROM Account a GROUP BY a.balance,a.name";
+Query query = session.createQuery(hqlQuery);
+List<Object[]> list = query.list();
+for(Object[] group: list) {
+    System.out.println("Name :" +group[0]);
+    System.out.println("Balance :" +group[1]);
+    System.out.println("Min balance :" +group[2]);
+    System.out.println("Max balance :" +group[3]);
+    System.out.println("Avg balance :" +group[4]);
+}
+Aggregate function with "GROUP BY" clause and "HAVING" clause
+Example
+SQL: SELECT NAME, AVG(BAL) FROM ACCOUNT GROUP BY NAME HAVING NAME LIKE '%ashok%';
+HQL: SELECT a.name, AVG(a.bal) FROM Account GROUP BY a.namr HAVING a.name LIKE '%ashok%';
+Code Block
+String hqlQuery = "SELECT a.name, AVG(a.bal) FROM Account GROUP BY a.namr HAVING a.name LIKE '%ashok%'";
+Query query = session.createQuery(hqlQuery);
+List<Object[]> list = query.list();
+for(Object[] group: list) {
+    System.out.println("Name :" +group[0]);
+    System.out.println("Avg Balance :" +group[1]);
+}
+ORDER BY clause with "ASC" and "DESC"
+Example 1: single column on order by clause
+SQL: SELCT * FROM ACCOUNT ORDER BY BALANCE
+HQL: FROM Account a ORDER BY a.balance
+Code Block
+String hqlQuery = "FROM Account a ORDER BY a.balance";
+Query query = session.createQuery(hqlQuery);
+List<Account> list = query.list();
+for(Account account: list) {
+    System.out.println("Name :" +account.getAccountId());
+    System.out.println("Name :" +account.getName());
+    System.out.println("Balance :" +account.getBalance());
+}
+Note: ORDER BY clause by default it will take Ascending order. If we want to specify the order explicitly, we can write the query as follows. 
+HQL: FROM Account a ORDER BY a.balance ASC (Ascending order)
+HQL: FROM Account a ORDER BY a.balance DESC(Descending order)
+Example 2: Multiple columns on order by clause 
+SQL: SELECT * FROM ACCOUNT ORDER BY BALANCE, NAME
+HQL: select * FROM Account a ORDER BY a.balance, a.name
+Code block 
+String hqlQuery = "FROM Account a ORDER BY a.balance, a.name";
+Query query = session.createQuery(hqlQuery);
+List<Account> list = query.list();
+for(Account account: list) {
+    System.out.println("Name :" +account.getAccountId());
+    System.out.println("Name :" +account.getName());
+    System.out.println("Balance :" +account.getBalance());
+}
+Between Clause
+SQL: SELECT * FROM ACCOUNT WHERE BALANCE BETWEEN 2000 and 8000;
+HQL: FROM Account a WHERE a.balance between :lowerBound and :upperBound
+          The negated forms can be written as follows 
+SQL: SELECT * FROM ACCOUNT WHERE BALANCE NOT BETWEEN 2000 and 8000;
+HQL: FROM Account a WHERE a.balance not between :lowerBound and :upperBound
+Code Block
+String hqlQuery = "FROM Account a WHERE a.balance between :lowerBound and :upperBound";
+Query query = session.createQuery(hqlQuery);
+query.setParameter("lowerBound",2000.0);
+query.setParameter("upperBound",8000.0);
+List<Account> list = query.list();
+for(Account account: list) {
+    System.out.println("Name :" +account.getAccountId());
+    System.out.println("Name :" +account.getName());
+    System.out.println("Balance :" +account.getBalance());
+}
+In Clause
+SQL: SELECT * FROM ACCOUNT WHERE NAME IN ('Ashok','Vinod','Dillesh')
+HQL: FROM Account a WHERE a.name in (:listOfValues)
+          The negated forms can be written as follows 
+SQL: SELECT * FROM ACCOUNT WHERE NAME NOT IN ('Ashok','Vinod','Dillesh')
+HQL: FROM Account a WHERE a.name not in (:listOfValues)
+Code Block
+String hqlQuery = "FROM Account a WHERE a.name in (:listOfValues)";
+Query query = session.createQuery(hqlQuery);
+List<String> listOfValues = new ArrayList<String>();
+listOfValues.add("Ashok");
+listOfValues.add("Vinod");
+listOfValues.add("Dillesh");
+query.setParameterList("listOfValues",listOfValues);
+List<Account> list = query.list();
+for(Account account: list) {
+    System.out.println("Name :" +account.getAccountId());
+    System.out.println("Name :" +account.getName());
+    System.out.println("Balance :" +account.getBalance());
+}
+OR
+String hqlQuery = "FROM Account a WHERE a.name in (:listOfValues)";
+Query query = session.createQuery(hqlQuery);
+Object[] listOfValues = new Object[3];
+listOfValues[0] = "Ashok";
+listOfValues[1] = "Vinod";
+listOfValues[2] = "Dillesh";
+query.setParameterList("listOfValues",listOfValues);
+List<Account> list = query.list();
+for(Account account: list) {
+    System.out.println("Name :" +account.getAccountId());
+    System.out.println("Name :" +account.getName());
+    System.out.println("Balance :" +account.getBalance());
+}
+Like Clause
+SQL: SELECT * FROM ACCOUNT WHERE NAME LIKE '%Ashok%'
+HQL: FROM Account a WHERE a.name LIKE :name
+          The negated forms can be written as follows 
+SQL: SELECT * FROM ACCOUNT WHERE NAME NOT LIKE '%Ashok%'
+HQL: FROM Account a WHERE a.name NOT LIKE :name
+Code Block
+String hqlQuery = "FROM Account a WHERE a.name in (:listOfValues)";
+Query query = session.createQuery(hqlQuery);
+query.setParameter("name","%Ashok%");
+List<Account> list = query.list();
+for(Account account: list) {
+    System.out.println("Name :" +account.getAccountId());
+    System.out.println("Name :" +account.getName());
+    System.out.println("Balance :" +account.getBalance());
+}

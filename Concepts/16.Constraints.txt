@@ -1,0 +1,61 @@
+@Id
+@GeneratedValue
+@Column(name = "id", updatable = false, nullable = false)
+private Long id;
+
+@GeneratedValue(strategy = GenerationType.AUTO)
+//it selects a generation strategy based on the database specific dialect
+
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+//It relies on an auto-incremented database column and lets the database generate a new value with each insert operation. 
+
+@GeneratedValue(strategy = GenerationType.SEQUENCE)
+@SequenceGenerator(name="book_generator", sequenceName = "book_seq", allocationSize=50)
+
+// The GenerationType.SEQUENCE is my preferred way to generate primary key values and uses a database sequence to generate unique values.
+
+It requires additional select statements to get the next value from a database sequence. But this has no performance impact for most applications.
+
+//@GeneratedValue(strategy = GenerationType.TABLE)
+
+ It simulates a sequence by storing and updating its current value in a database table which requires the use of pessimistic locks which put all transactions into a sequential order.
+
+// COmposite keys
+
+@Embeddable
+public class EmployeeId implements Serializable {
+ 
+    @Column(name = "company_id")
+    private Long companyId;
+ 
+    @Column(name = "employee_number")
+    private Long employeeNumber;
+
+
+// EMployee Mapping
+
+Employee mapping looks as follows:
+
+@Entity(name = "Employee")
+@Table(name = "employee")
+public class Employee {
+ 
+    @EmbeddedId
+    private EmployeeId id; 
+
+// Phone mapping
+
+@ManyToOne
+    @JoinColumns({
+        @JoinColumn(
+            name = "company_id",
+            referencedColumnName = "company_id"),
+        @JoinColumn(
+            name = "employee_number",
+            referencedColumnName = "employee_number")
+    })
+
+// Unique Constarints
+
+@Table(name = “tableName”, uniqueConstraints = @UniqueConstraint(name = “uniqueName”, columnNames = “columnName”))
+

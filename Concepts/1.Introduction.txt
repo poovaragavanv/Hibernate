@@ -1,0 +1,56 @@
+# What is Hibernate:
+1.Hibernate is the ORM tool given to transfer the data between a java (object) application and a database (Relational) in the form of the objects.  Hibernate is the open source light weight tool given by Gavin King in 2001.
+
+2.Hibernate is a non-invasive framework,  means it wont forces the programmers to extend/implement any class/interface, and in hibernate we have all POJO classes so its light weight.
+
+3. Hibernate can runs with in or with out server, that mean it will suitable for all types of java applications (stand alone or desktop or any serversides etc..)
+
+4.Hibernate is purely for persistence (to store/retrieve data from Database).
+
+# Hibernate is ORM(Object Relational Mapping) tool in Java
+
+1. Hibernate is Java framework used for developing data access layer in Java based applications
+
+2.JDBC programming requires lot of work to create SQL statement, execute the statement and then process the results. It is the responsibility of the programmer to handle exceptions occurred in runtime. Exception handling is also a very big task and it requires a lot of effort to write good code.
+
+3.To solve all these issues ORM(Object Relational Mapping) tool was developed. The ORM tool stands for Object Relational Mapping tool and it takes care to generating the sql statements, executing the sql statement and finally processing the result. It also handles the exceptions occurred in the program. Hibernate is one of the ORM tool.
+
+# Features and benefits of ORM tools
+
+1.The ORM tool is great tool which is used to map the logical business model (POJO class) with the relational database (physical model).
+ 
+2.The ORM tool is very useful in reducing the amount of coding. ORM tools helps the developers to quickly develop the data access layer. Developers mostly concentrate on the business functions and uses the ORM tool for CRUD (Create, Read, Update and Delete) operation.
+ 
+3. Easy to adapt the changes in database structure. If you have to change the database structure you just have to change the definition of model class the ORM will automatically change the SQL and Select queries. This eases the development and maintenance of enterprise application very easily.
+ 
+4. The ORM tools provides rich query language which based on the domain model (POJO) class. Developers writes the query using the domain model and the the ORM tool generates the SQL queries automatically. So, programmer concentrates on the business login and the ORM tool takes care of the persistence, retrieval and query the database.
+ 
+5.ORM tool support relationship amongst the objects. 
+ 
+6.It supports lazy loading and many other optimization functions. 
+ 
+7.It also supports the concurrency.
+ 
+8.It also supports primary and secondary level cache.
+ 
+9.Transaction management also a very important feature of the database. The ORM tools also supports transaction management and error handling.Hibernate components
+
+# Hibernate framework components
+
+Hibernate Core: This is also know as Hibernate ORM. Hibernate Core is the main component of the Hibernate architecture. This components is responsible for performing the CRUD operations.
+ 
+Hibernate Annotations: This is merged with Hibernate Core in the release of Hibernate version 3.6. Hibernate Annotation is a way to provide the mapping metadata to the Hibernate runtime.
+ 
+Hibernate Entity Manager: The HibernateEntity Manager provides the API for performing the CRUD operations. Though HibernateEntity manager programmer interacts with the database.
+ 
+Hibernate Envers: Is and Easy Entity Auditing library.
+ 
+Hibernate OGM: The OGM stands for Object/Grid Mapper which is an extension to store data in a NoSQL store.
+ 
+Hibernate Shards:  The Hibernate Shards is used for horizontal partitioning for multiple relational databases. Although Hibernate Shards is not fully compatible with Hibernate 4.x. Check the compatibility in the current release specs.
+ 
+Hibernate Search: The Hibernate Search is hibernate library to access the Apache Lucene full text engine from Hibernate.
+  
+Hibernate Tools: It includes the  Eclipse plugins, Ant tasks etc...
+ 
+Hibernate Validator: Used for validation in the POJO class.

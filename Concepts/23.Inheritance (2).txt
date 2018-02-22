@@ -1,0 +1,31 @@
+#One to One Mapping
+
+	A unidirectional one-to-one association uses the relationship student and address
+
+	<one-to-one name="address" class="com.rags.onetoone.Address" cascade="all" />
+
+# One to Many Mapping
+
+	A unidirectional One-to-many association on a foreign key is an unusual case, and is not recommended. 		          	Consider referring One to Many using Joins
+
+	<set name="studentPhone" cascade="all">
+		<key column="stud_id" />
+		<one-to-many class="com.rags.onetomany.Phone" />
+	</set>
+
+
+#Many to Many Mapping
+
+	A unidirectional Many-to-many association mappings need 3 tables, the intermediate table contains primary key of both 		the entity. But Many to Many is not recommended since most of the use case the intermediate need to maintain some extra 		data like createdby etc..
+
+	<set name="courses" table="SCOURSE" cascade="all">
+		<key column="SID" />
+		<many-to-many column="CID" class="com.rags.manytomany.Course" />
+	</set>
+
+# Many to One Mapping
+
+	A unidirectional many-to-one association is the most common kind of unidirectional association.
+
+	<many-to-one name="studentAddress" class="com.ragsmaytoone.Address" column="STUDENT_ADDRESS" cascade="all" />
+

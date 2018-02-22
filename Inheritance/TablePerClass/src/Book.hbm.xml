@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE hibernate-mapping 
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" 
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping> 
+	<class name="com.candidjava.hibernate.Book" table="Book12" discriminator-value="book" >
+		
+		<id name="id"  type="int" column="id">
+		<generator class="increment"/>
+		</id>
+	   <discriminator column="book_type" type= "string"/> <!-- position of dis colum  -->
+		
+		<property name="title" type="string" column="title"/>
+        <property name="author"  type="string" column="author"/>
+		<property name="cost"  type="double" column="cost"/>
+		
+		
+ <subclass name="com.rags.TablePerClass.SpecialEditionBook" discriminator-value="SpecialEditionBook">
+   <property name="newfeatures" type="string" column="features"/>
+  </subclass>
+
+  
+  <subclass name="com.candidjava.hibernate.InternationalBook" discriminator-value="InternationalBook">
+   <property name="languages" type="string" column="languages"/>
+	<property name="region" type="int" column="region"/>
+</subclass>
+
+  </class>
+</hibernate-mapping>

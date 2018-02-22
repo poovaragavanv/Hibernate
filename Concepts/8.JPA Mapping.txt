@@ -1,0 +1,108 @@
+Annotations vs Configuration in Hibernate
+
+Annotations vs. XML
+
+Actually annotations are introduced into java from JDK 1.5
+
+
+<class name=”com.sdnext.hibernate.tutorial.dto.UserDetails” table=”USER_DETAIL”>
+
+Now Mapping a class UserDetails to Table USER_DETAIL in Annotation —
+
+@Entity
+@Table (name=”USER_DETAIL”)
+public class UserDetails{}
+here @Entity declares the class as an entity (i.e. a persistent POJO class)
+@Table is set at the class level; it allows you to define the table, catalog, and schema names for your entity mapping. If no @Table is defined the default values are used: the unqualified class name of the entity.
+
+Mapping primary key USER_ID of table to property userId of class UserDetails in XML
+
+<id name=”userId” type=”long” column=”USER_ID” >
+Mapping primary key USER_ID of table to property userId of class UserDetails in Annotation
+
+@Entity
+@Table (name=”USER_DETAILS”)
+public class UserDetails
+{
+@Id
+@Column(name=”USER_ID”)
+private long userId;
+}
+here @Id declares the identifier property of this entity. The class UserDetails is mapped to the USER_TABLE table, using the column USER_ID as its primary key column.
+The column(s) used for a property mapping can be defined using the @Column annotation. Use it to override default values .
+
+Id Generator Class Mapping in XML
+
+<id name=”userId” type=”long” column=”USER_ID” >
+<generator class=”auto”/>
+</id>
+Id Generator Class Mapping in Annotation
+
+    @Id
+@Column(name=”USER_ID”)
+@GeneratedValue(strategy=GenerationType.AUTO)
+private long  userId;
+
+Different GenerationType Enum Properties….
+
+AUTO – either identity column, sequence or table depending on the underlying DB
+TABLE – table holding the id
+IDENTITY – identity column
+SEQUENCE – sequence
+identity copy – the identity is copied from another entity
+ 
+
+@GeneratedValue Provides for the specification of generation strategies for the values of primary keys.
+Enum GenerationType Defines the types of primary key generation strategies.
+
+Mapping Column to the property of class in XML
+
+<property name=”userName” column=”USER_NAME”>
+Mapping Column to the property of class in Annotation
+
+@Column(name=”USER_NAME”)
+  private String userName;
+
+@Column– provides the name of the column in a table if it is different from the attribute name. (By default, the two names are assumed to be the same.)
+More JPA  Annotations for Class Field:
+@Basic –  The use of the Basic annotation is optional for persistent fields and properties of these types. If the Basic annotation is not specified for such a field or property, the default values of the Basic annotation will apply. Example-
+
+@Basic
+private String userName;
+
+@Transient – using when if you want skip any field of entity class to save in the database. Example-
+@Transient
+private String middleName;
+
+@Embedded- using when if property or field of persistence class is Embeddable  persistence class.
+Example- class Address{  @Column(name=”STREET”)
+
+Annotations vs Configuration in Hibernate
+ @Embedded
+ private Address address; 
+
+@ElementColllection- Defines a collection of instances of a basic type or embeddable class. Must be specified if the collection is to be mapped by means of a collection table. Example-
+@ElementCollection
+private Collection<Address> lisOfAddresses = new ArrayList<Address>(); 
+
+@Id- Specifies the primary key of an entity. Example-
+@Id
+private long userId;
+
+@EmbeddedId- composite primary key of an embeddable class. Example-
+@Embeddable
+Class Address{
+                         @EmbeddedId
+                          private int addressId;
+                         —-
+                         —-
+             }
+
+@Version- Specifies the version field or property of an entity class that serves as its optimistic lock value. The version is used to ensure integrity when performing the merge operation and for optimistic concurrency control. Example-
+@Version
+private int addressId;
+
+@Temporal- This annotation must be specified for persistent fields or properties of type java.util.Date and java.util.Calendar. Example-
+    @Column(name=”JOIN_DATE”)
+@Temporal(TemporalType.DATE)
+private Date joinDate;

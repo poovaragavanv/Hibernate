@@ -1,0 +1,31 @@
+Hibernate Annotation based Mapping
+
+#One to One
+
+One to One Unidirectional Association Mapping Annotation
+
+@OneToOne(cascade = CascadeType.ALL)
+
+# One-to-many 
+
+One-to-many associations are declared at the property level with the annotation @OneToMany. One to many associations may be bidirectional.
+
+A unidirectional one to many with join table is much preferred. This association is described through an@JoinTable.
+
+@OneToMany(cascade = CascadeType.ALL)
+@JoinTable(name = "STUDENT_PHONE", joinColumns = { @JoinColumn(name = "STUDENT_ID") }, inverseJoinColumns = { @JoinColumn(name = "PHONE_ID") })
+
+
+#Many-to-Many 
+
+A many-to-many association is defined logically using the @ManyToMany annotation. You also have to describe the association table and the join conditions using the @JoinTable annotation.
+
+@ManyToMany(cascade = CascadeType.ALL)
+@JoinTable(name = "STUDENT_COURSE", joinColumns = { @JoinColumn(name = "STUDENT_ID") }, inverseJoinColumns = { @JoinColumn(name = "COURSE_ID") })
+
+
+#Many to One 
+
+Unidirectional Association Mapping Annotation
+
+@ManyToOne(cascade = CascadeType.ALL)

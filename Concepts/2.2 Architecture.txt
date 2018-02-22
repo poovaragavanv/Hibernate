@@ -1,0 +1,79 @@
+Hibernate Lifecycle Of pojo Class Objects
+
+Hibernate Object States
+
+	In hibernate an entity or object has three states. 
+	It can be persistent, detached or transient. 
+	All the states are defined with hibernate session. 
+		Persistent state object resides in session where as detached and transient or not in session. 
+		Objects of detached and transient state can later be made persistent.
+
+1.Persistent State in Hibernate
+	In Hibernate, Persistent State is a state which is synchronized with database with an identifier value. 
+	Persistence means data has been saved in database. Persistent State is associated with hibernate session. 
+	All the objects or entity which are in hibernate session, are in persistent state. 
+	If we fetch an entity from hibernate session which fetches data from database, then that entity is in Persistent state. 
+	Any change made in persistent entity is saved to database once the unit of work is finished.
+
+		Session session=getSession();
+		session.beginTransaction();
+		Employee employee = new Employee(1,ABC,XYZ);
+		session.save(employee); 
+
+	Create an object by new keyword and set its values. 
+	To persist this object, we need the session instance. 
+
+	Now an entity can be persistent by different methods of hibernate session. 
+
+	Session.save(Object object)
+		It saves the newly created object into database. If identifier not available to the object, first it will assign identifier then save to database. 		Now that object or entity is in persistent state. save() method is not useful for long running execution. 
+	Session.persist(Object object)
+		It also saves the object into database. persist () method does not guarantee to return the generated ID and also does not guarantee to 		persist the object immediately. When we do flush, at that time persist() saves the data in database. 
+		This method should be used when there is long time execution.
+
+2.Detached State in Hibernate
+
+In Hibernate, Detached State is the state of an entity which was in hibernate session previously but now it has been detached from the session. This detached object still has reference. When an object or entity is detached, it's all associated object is also detached. Now if we do any changes in this detached entity, it is not going to save in database.
+How to Detach Object (Entity) from Session in Hibernate
+
+	To detach object from the session, hibernate provides a method which is called by session object. 
+	After detach, the object does not lose its reference and will not be garbage collected. 
+
+	void Session.evict(Object object)
+	
+		Pass the entity or object which needs to be detached from the session. 
+		If we want to enable the associate objects to be detached, we need to configure cascade="evict" in the entity.
+
+How to Persist Detached Object (Entity) in Hibernate
+
+	Session. update(): detached object is updated as persistent with its identifier. 
+	Session.merge(): detached object is copied into the session with its identifier to make it persistent. 
+
+		//get session object
+		Session session=getSession();
+		session.beginTransaction();	
+		Dimension d = new Dimension(1,2,5);
+		//persist it into database
+		session.save(d);
+		//detach it from the session
+		session.evict(d);
+		//do changes in the detached object
+		d.setLength(10);
+		//save it in another transaction 
+		session.update(d);
+
+3.Transient State in Hibernate
+
+	Transient state is newly created object or entity. 
+	The object which is being created using new key word and has not yet persisted to session, it is in transient state. 
+	The object in transient state is garbage collected once there is no reference for it. 
+	In closed session, all the updates in the entity will be behaved as transient state.
+
+How to make Transient Object (Entity) Persistent in Hibernate
+	The transient state object can be made persistent into hibernate session. 
+	The save() and persist() method is used to make transient state object as persistent. 
+
+		Dimension d = new Dimension(1,2,5);
+		session.save(d);
+		//or
+		session.persist(d);

@@ -1,0 +1,25 @@
+Advantages
+
+1) Opensource and Lightweight: Hibernate framework is opensource under the LGPL license and lightweight.
+
+2) Fast performance: The performance of hibernate framework is fast because cache is internally used in hibernate framework. There are two types of cache in hibernate framework first level cache and second level cache. First level cache is enabled bydefault.
+
+3) Database Independent query: HQL (Hibernate Query Language) is the object-oriented version of SQL. It generates the database independent queries. So you don't need to write database specific queries. Before Hibernate, If database is changed for the project, we need to change the SQL query as well that leads to the maintenance problem.
+
+4) Automatic table creation: Hibernate framework provides the facility to create the tables of the database automatically. So there is no need to create tables in the database manually.
+
+5) Simplifies complex join: To fetch data form multiple tables is easy in hibernate framework.
+
+6) Provides query statistics and database status: Hibernate supports Query cache and provide statistics about query and database status.
+
+In order to use hibernate following terms need to be understood:
+
+Persistence object an object which contains data that can persisted to database is called Persistence object.
+
+Session: is an interface provided by hibernate this interface exposes methods for managing the persistence of persistence object. implementation of this interface is provided by the framework. This session object is required by the application for performing persistence operations. This object as transactional scope thats it is created only for the duration of performing persistence operations.
+
+SessionFactory: is an interface of the framework it provide factory method for creating session objects as well as methods for managing mapping and configuration information and second level cashing. Implementation of this interface is provided by the framework an object of type SessionFactory is created and used through out the application that's this objects as application scope.
+
+Configuration: configuration is framework provided class which is responsible for maintaining configuration information in object forms. (Each ORM framework required some database specific information. Such as driver Class, URL username, Password etc.¦ this information is called configuration information. Conventionally configuration information is provided to the framework in xml format with the help of file name hibernate.cif.xml)
+
+MappingInformation: ORM frameworks requires information of objects and there relation to database tables. This information is used in generating queries and ResultSet to object mapping. Conventionally mapping information is provided in xml format. For each persistence class in xml file is created which is conventionally name as .hbm.xml

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.candidjava.hibernate.Student" table="STUD1">
+		<id name="studentId" type="long" column="ID">
+			<generator class="increment" />
+		</id>
+		<property name="studentName" type="string" length="100"
+			not-null="true" column="name" />
+		<many-to-one name="studentAddress" class="com.candidjava.hibernate.Address"
+			column="STUDENT_ADDRESS" cascade="all" />
+	</class>
+</hibernate-mapping>
